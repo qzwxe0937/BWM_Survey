@@ -416,7 +416,7 @@ function showCurrentBWMQuestion() {
         container.innerHTML = `
             <div class="alert alert-success">
                 <h4><i class="fas fa-check-circle"></i> 所有問題已完成！</h4>
-                <p class="mb-3">您已完成所有BWM評估題目，現在可以提交問卷。</p>
+                <p class="mb-3">您已完成所有評估題目，現在可以提交問卷。</p>
             </div>
         `;
         // 檢查是否所有答案都已完成，如果是則顯示提交按鈕
@@ -1659,7 +1659,7 @@ function displayBWMResults(data) {
     let resultsHtml = `
         <div class="text-center mb-4">
             <h1 class="display-4 text-success">問卷提交成功！</h1>
-            <p class="lead text-muted">感謝您完成BWM數位轉型影響因素研究問卷</p>
+                            <p class="lead text-muted">感謝您完成數位轉型影響因素研究問卷</p>
         </div>
         
         <div class="row">
@@ -1683,7 +1683,7 @@ function displayBWMResults(data) {
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h4>BWM評估結果</h4>
+                        <h4>評估結果</h4>
                     </div>
                     <div class="card-body">
                         <p><strong>最重要因素:</strong> ${data.bwm.bestFactor}. ${factors[data.bwm.bestFactor].name} (構面：${dimensions[factors[data.bwm.bestFactor].dimension].name})</p>
@@ -1698,7 +1698,7 @@ function displayBWMResults(data) {
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>BWM評估結果</h4>
+                        <h4>評估結果</h4>
                     </div>
                     <div class="card-body">
                         <h5>【最重要因素比較】</h5>
@@ -1749,7 +1749,7 @@ function downloadBWMResults() {
             // 創建下載鏈接
             const a = document.createElement('a');
             a.href = url;
-            a.download = `BWM問卷結果_批量版_${new Date().toISOString().split('T')[0]}.txt`;
+            a.download = `問卷結果_批量版_${new Date().toISOString().split('T')[0]}.txt`;
             a.style.display = 'none';
             
             // 添加到DOM並觸發下載
@@ -1775,7 +1775,7 @@ function downloadBWMResults() {
 
 // 格式化BWM郵件內容
 function formatBWMEmailContent(data) {
-    let content = 'BWM數位轉型影響因素研究問卷結果 (批量比較版)\n';
+    let content = '數位轉型影響因素研究問卷結果 (批量比較版)\n';
     content += '='.repeat(60) + '\n\n';
     
     content += '【基本資料】\n';
@@ -1785,7 +1785,7 @@ function formatBWMEmailContent(data) {
     content += `是否為電子製造業：${data.basic.electronics_industry === 'yes' ? '是' : data.basic.electronics_industry === 'no' ? '否' : '未填寫'}\n`;
     content += `數位轉型年資：${data.basic.experience || '未填寫'}\n\n`;
     
-    content += '【BWM評估結果】\n';
+                content += '【評估結果】\n';
     content += `最重要因素：${data.bwm.bestFactor}. ${factors[data.bwm.bestFactor].name} (構面：${dimensions[factors[data.bwm.bestFactor].dimension].name})\n`;
     content += `最不重要因素：${data.bwm.worstFactor}. ${factors[data.bwm.worstFactor].name} (構面：${dimensions[factors[data.bwm.worstFactor].dimension].name})\n\n`;
     

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數位轉型影響因素研究問卷 - 批量比較版</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .question-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step-content {
+            display: none;
+        }
+        .step-content.active {
+            display: block;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .step-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #dee2e6;
+            margin: 0 5px;
+            position: relative;
+        }
+        .step-dot.active {
+            background-color: #007bff;
+        }
+        .step-dot.completed {
+            background-color: #28a745;
+        }
+        .step-dot::after {
+            content: attr(data-step);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #666;
+        }
+        .factor-option {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .factor-option:hover {
+            border-color: #007bff;
+            background-color: #f8f9fa;
+        }
+        .factor-option.selected {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .comparison-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+        }
+        .info-box {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .factor-description {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        /* 基本資料按鈕式選擇樣式 */
+        .btn-group-vertical .btn {
+            margin-bottom: 5px;
+            border-radius: 8px !important;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-group-vertical .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-check:checked + .btn {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .btn-check:checked + .btn:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        
+        /* 評分按鈕樣式 */
+        .rating-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 5px 0;
+        }
+
+        .rating-btn {
+            font-size: 12px;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .rating-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .rating-btn.btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        /* 批量比較表格樣式 */
+        .batch-comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 12px;
+        }
+        
+        .batch-comparison-table th,
+        .batch-comparison-table td {
+            border: 1px solid #dee2e6;
+            padding: 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .batch-comparison-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .batch-comparison-table .factor-header {
+            background-color: #e3f2fd;
+            font-weight: bold;
+            color: #1976d2;
+            text-align: left;
+            padding: 6px;
+        }
+        
+        .batch-comparison-table .rating-cell {
+            padding: 2px;
+        }
+        
+        .batch-comparison-table .rating-btn {
+            font-size: 9px;
+            padding: 2px 3px;
+            margin: 1px;
+        }
+        
+        /* 新增的因素說明和舉例列樣式 */
+        .batch-comparison-table .factor-description-cell {
+            background-color: #f8f9fa;
+            text-align: left;
+            padding: 6px;
+            max-width: 200px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .batch-comparison-table .factor-examples-cell {
+            background-color: #fff3cd;
+            text-align: left;
+            padding: 6px;
+            max-width: 180px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        /* 因素資訊卡片樣式 */
+        .best-factor-info .card,
+        .worst-factor-info .card {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        .best-factor-info .card-header {
+            border-radius: 8px 8px 0 0 !important;
+        }
+        
+        .worst-factor-info .card-header {
+            border-radius: 8px 8px 0 0 !important;
+        }
+        
+        /* 評分標準表格樣式 */
+        .rating-scale-table .table {
+            font-size: 12px;
+        }
+        
+        .rating-scale-table .table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .rating-scale-table .table td {
+            vertical-align: middle;
+            padding: 6px;
+        }
+        
+        /* 過渡效果 */
+        .header-content,
+        .questionnaire-description {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .header-content.hidden,
+        .questionnaire-description.hidden {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            transition: margin-top 0.3s ease-in-out;
+        }
+        
+        /* 批量比較進度指示器 */
+        .batch-progress {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .batch-progress .progress {
+            height: 10px;
+        }
+        
+        /* 比較說明樣式 */
+        .comparison-instruction {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .comparison-instruction h6 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .comparison-instruction ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        
+        .comparison-instruction li {
+            color: #856404;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="container mt-4">
+        <!-- 頁面標題 -->
+        <div class="header-content text-center mb-4">
+            <h1 class="display-4">數位轉型影響因素研究問卷</h1>
+            <p class="lead">國立雲林科技大學 資訊管理系碩士班</p>
+            <p class="text-muted">指導教授: 莊煥銘 博士 | 研究生: 劉哲瑋</p>
+        </div>
+
+        <!-- 進度指示器 -->
+        <div class="step-indicator">
+            <div class="step-dot active" data-step="基本資料"></div>
+            <div class="step-dot" data-step="研究說明"></div>
+            <div class="step-dot" data-step="BWM評估"></div>
+        </div>
+
+        <!-- 進度條 -->
+        <div class="progress mb-4">
+            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+
+        <!-- 問卷表單 -->
+        <form id="bwmQuestionnaireForm">
+            <!-- 步驟1：基本資料 -->
+            <div class="step-content active" id="step1">
+                <div class="question-card">
+                    <h3>步驟 1：基本資料</h3>
+                    <p class="text-muted">請依據您目前的個人與工作情況，在各題中選擇作答。</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">年齡</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="age" id="age_25_30" value="25~30歲" required>
+                                <label class="btn btn-outline-primary" for="age_25_30">25~30歲</label>
+                                
+                                <input type="radio" class="btn-check" name="age" id="age_31_35" value="31~35歲" required>
+                                <label class="btn btn-outline-primary" for="age_31_35">31~35歲</label>
+                                
+                                <input type="radio" class="btn-check" name="age" id="age_36_40" value="36~40歲" required>
+                                <label class="btn btn-outline-primary" for="age_36_40">36~40歲</label>
+                                
+                                <input type="radio" class="btn-check" name="age" id="age_41_45" value="41~45歲" required>
+                                <label class="btn btn-outline-primary" for="age_41_45">41~45歲</label>
+                                
+                                <input type="radio" class="btn-check" name="age" id="age_46_plus" value="46歲及以上" required>
+                                <label class="btn btn-outline-primary" for="age_46_plus">46歲及以上</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">教育程度</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="education" id="education_college" value="專科" required>
+                                <label class="btn btn-outline-primary" for="education_college">專科</label>
+                                
+                                <input type="radio" class="btn-check" name="education" id="education_university" value="大學" required>
+                                <label class="btn btn-outline-primary" for="education_university">大學</label>
+                                
+                                <input type="radio" class="btn-check" name="education" id="education_master" value="碩士" required>
+                                <label class="btn btn-outline-primary" for="education_master">碩士</label>
+                                
+                                <input type="radio" class="btn-check" name="education" id="education_phd" value="博士" required>
+                                <label class="btn btn-outline-primary" for="education_phd">博士</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="form-label">數位轉型年資</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="experience" id="experience_5" value="5年" required>
+                                <label class="btn btn-outline-primary" for="experience_5">5年</label>
+                                
+                                <input type="radio" class="btn-check" name="experience" id="experience_6_10" value="6~10年" required>
+                                <label class="btn btn-outline-primary" for="experience_6_10">6~10年</label>
+                                
+                                <input type="radio" class="btn-check" name="experience" id="experience_11_20" value="11~20年" required>
+                                <label class="btn btn-outline-primary" for="experience_11_20">11~20年</label>
+                                
+                                <input type="radio" class="btn-check" name="experience" id="experience_21_plus" value="21年及以上" required>
+                                <label class="btn btn-outline-primary" for="experience_21_plus">21年及以上</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">是否為電子製造業</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="electronics_industry" id="electronics_yes" value="yes" required>
+                                <label class="btn btn-outline-primary" for="electronics_yes">是</label>
+                                
+                                <input type="radio" class="btn-check" name="electronics_industry" id="electronics_no" value="no" required>
+                                <label class="btn btn-outline-primary" for="electronics_no">否</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label class="form-label">性別</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="gender" id="gender_male" value="male" required>
+                                <label class="btn btn-outline-primary" for="gender_male">男</label>
+                                
+                                <input type="radio" class="btn-check" name="gender" id="gender_female" value="female" required>
+                                <label class="btn btn-outline-primary" for="gender_female">女</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">下一步</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 步驟2：研究架構說明 -->
+            <div class="step-content" id="step2">
+                <div class="question-card">
+                    <h3>步驟 2：研究架構說明</h3>
+                    
+                    <!-- 研究架構圖 -->
+                    <div class="text-center mb-4">
+                        <img src="Research_aspects.png" alt="研究架構圖" class="img-fluid" style="max-width: 100%; height: auto;">
+                    </div>
+                    
+                    <div class="factor-description">
+                        <h5>研究構面說明</h5>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>構面</th>
+                                    <th>說明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>A、科技機會主義</strong></td>
+                                    <td>利用新技術帶來的機會來推動創新和增長。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>B、資源管弦化</strong></td>
+                                    <td>有效配置和整合資源以提升組織效率和能力。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>C、IT人員能力</strong></td>
+                                    <td>IT專業人員的技術和行為技能，用於支持和推動企業變革。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D、數位轉型</strong></td>
+                                    <td>通過技術革新來重塑企業運營和商業模式，以提高競爭力。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>E、組織機動性</strong></td>
+                                    <td>企業快速適應市場變化和抓住機遇的能力。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">上一步</button>
+                        <button type="button" class="btn btn-primary" onclick="nextStep()">下一步</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 步驟3：BWM評估 -->
+            <div class="step-content" id="step3">
+                <div class="question-card">
+                    <h3>步驟 3：BWM因素重要性評估</h3>
+                    <p class="text-muted">請根據BWM方法進行因素重要性評估。您需要：</p>
+                    <ul class="text-muted">
+                        <li>選擇一個最佳（最重要）因素</li>
+                        <li>選擇一個最劣（最不重要）因素</li>
+                        <li>進行最佳因素與其他因素的成對比較</li>
+                        <li>進行其他因素與最劣因素的成對比較</li>
+                    </ul>
+                    
+                    <!-- BWM問題進度顯示 -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0">BWM評估進度</h6>
+                            <span class="badge bg-primary" id="bwm-progress-text">0 / 0</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" id="bwm-progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="bwm-question-content">
+                        <!-- BWM問題將由JavaScript動態生成 -->
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()">上一步</button>
+                        <button type="button" class="btn btn-success ms-2" onclick="submitBWMQuestionnaire()" id="bwm-submit-btn" style="display: none;">
+                            <i class="fas fa-paper-plane"></i> 提交問卷
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="bwm_script_batch.js"></script>
+</body>
+</html> 

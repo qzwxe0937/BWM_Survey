@@ -703,7 +703,9 @@ function generateBatchBestFactorComparison(container, question) {
     
     otherFactors.forEach(factorKey => {
         const factorInfo = factors[factorKey];
-        const savedValue = bwmAnswers[`best_${savedBestFactor}_${factorKey}`];
+        // 確保只獲取最佳因素比較的答案，避免與最劣因素比較混淆
+        const answerKey = `best_${savedBestFactor}_${factorKey}`;
+        const savedValue = bwmAnswers[answerKey];
         
         html += `
             <tr>
@@ -750,7 +752,9 @@ function generateBatchBestFactorComparison(container, question) {
     
     otherFactors.forEach(factorKey => {
         const factorInfo = factors[factorKey];
-        const savedValue = bwmAnswers[`best_${savedBestFactor}_${factorKey}`];
+        // 確保只獲取最佳因素比較的答案，避免與最劣因素比較混淆
+        const answerKey = `best_${savedBestFactor}_${factorKey}`;
+        const savedValue = bwmAnswers[answerKey];
         
         html += `
             <div class="comparison-card">
@@ -916,7 +920,9 @@ function generateBatchWorstFactorComparison(container, question) {
     
     otherFactors.forEach(factorKey => {
         const factorInfo = factors[factorKey];
-        const savedValue = bwmAnswers[`worst_${factorKey}_${savedWorstFactor}`];
+        // 確保只獲取最劣因素比較的答案，避免與最佳因素比較混淆
+        const answerKey = `worst_${factorKey}_${savedWorstFactor}`;
+        const savedValue = bwmAnswers[answerKey];
         
         html += `
             <tr>
@@ -963,7 +969,9 @@ function generateBatchWorstFactorComparison(container, question) {
     
     otherFactors.forEach(factorKey => {
         const factorInfo = factors[factorKey];
-        const savedValue = bwmAnswers[`worst_${factorKey}_${savedWorstFactor}`];
+        // 確保只獲取最劣因素比較的答案，避免與最佳因素比較混淆
+        const answerKey = `worst_${factorKey}_${savedWorstFactor}`;
+        const savedValue = bwmAnswers[answerKey];
         
         html += `
             <div class="comparison-card">
@@ -1112,10 +1120,15 @@ function setBatchBWMScore(key, score, button) {
     }
     
     // 同步更新對應的桌面版/移動版按鈕
+    // 使用更精確的選擇器來避免匹配到其他按鈕
     const allButtons = document.querySelectorAll(`[onclick*="setBatchBWMScore('${key}', ${score}"]`);
     allButtons.forEach(btn => {
-        btn.classList.remove('btn-outline-secondary');
-        btn.classList.add('btn-primary');
+        // 額外檢查確保這是正確的按鈕
+        const onclickAttr = btn.getAttribute('onclick');
+        if (onclickAttr && onclickAttr.includes(`setBatchBWMScore('${key}', ${score}`)) {
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('btn-primary');
+        }
     });
     
     autoSaveAnswers();

@@ -628,6 +628,41 @@ function generateBatchBestFactorComparison(container, question) {
             </ul>
         </div>
         
+        <!-- 移動端評分標準 -->
+        <div class="mobile-rating-scale">
+            <h6><i class="fas fa-info-circle"></i> 評分標準</h6>
+            <div class="rating-item">
+                <div class="rating-number">1</div>
+                <div class="rating-text">同等重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">3</div>
+                <div class="rating-text">稍微重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">5</div>
+                <div class="rating-text">明顯重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">7</div>
+                <div class="rating-text">非常重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">9</div>
+                <div class="rating-text">極端重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">2,4,6,8</div>
+                <div class="rating-text">中間值</div>
+            </div>
+        </div>
+        
+        <!-- 移動端導航提示 -->
+        <div class="mobile-navigation-hint">
+            <i class="fas fa-mobile-alt"></i>
+            點擊下方按鈕進行評分，完成後將自動進入下一題
+        </div>
+        
         <div class="batch-progress">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">完成進度</h6>
@@ -638,6 +673,7 @@ function generateBatchBestFactorComparison(container, question) {
             </div>
         </div>
         
+        <!-- 桌面版表格 -->
         <div class="table-responsive">
             <table class="batch-comparison-table">
                 <thead>
@@ -707,6 +743,51 @@ function generateBatchBestFactorComparison(container, question) {
                 </tbody>
             </table>
         </div>
+        
+        <!-- 移動版卡片式布局 -->
+        <div class="mobile-comparison-cards">
+    `;
+    
+    otherFactors.forEach(factorKey => {
+        const factorInfo = factors[factorKey];
+        const savedValue = bwmAnswers[`best_${savedBestFactor}_${factorKey}`];
+        
+        html += `
+            <div class="comparison-card">
+                <div class="comparison-card-header">
+                    <h6><strong>${savedBestFactor}. ${bestFactorInfo.name}</strong> vs <strong>${factorKey}. ${factorInfo.name}</strong></h6>
+                </div>
+                <div class="comparison-card-body">
+                    <div class="comparison-factor-info">
+                        <h6>因素說明：</h6>
+                        <p>${factorInfo.description}</p>
+                        <h6>舉例說明：</h6>
+                        <ul>
+                            ${factorInfo.examples.map(example => `<li>${example}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="mobile-rating-buttons">
+        `;
+        
+        for (let i = 1; i <= 9; i++) {
+            const isSelected = savedValue == i;
+            html += `
+                        <button type="button" class="btn mobile-rating-btn ${isSelected ? 'btn-primary' : 'btn-outline-secondary'}" 
+                                onclick="setBatchBWMScore('best_${savedBestFactor}_${factorKey}', ${i}, this)">
+                            ${i}
+                        </button>
+            `;
+        }
+        
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `
+        </div>
     `;
     
     container.innerHTML = html;
@@ -760,6 +841,41 @@ function generateBatchWorstFactorComparison(container, question) {
             </ul>
         </div>
         
+        <!-- 移動端評分標準 -->
+        <div class="mobile-rating-scale">
+            <h6><i class="fas fa-info-circle"></i> 評分標準</h6>
+            <div class="rating-item">
+                <div class="rating-number">1</div>
+                <div class="rating-text">同等重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">3</div>
+                <div class="rating-text">稍微重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">5</div>
+                <div class="rating-text">明顯重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">7</div>
+                <div class="rating-text">非常重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">9</div>
+                <div class="rating-text">極端重要</div>
+            </div>
+            <div class="rating-item">
+                <div class="rating-number">2,4,6,8</div>
+                <div class="rating-text">中間值</div>
+            </div>
+        </div>
+        
+        <!-- 移動端導航提示 -->
+        <div class="mobile-navigation-hint">
+            <i class="fas fa-mobile-alt"></i>
+            點擊下方按鈕進行評分，完成後將自動進入下一題
+        </div>
+        
         <div class="batch-progress">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h6 class="mb-0">完成進度</h6>
@@ -770,6 +886,7 @@ function generateBatchWorstFactorComparison(container, question) {
             </div>
         </div>
         
+        <!-- 桌面版表格 -->
         <div class="table-responsive">
             <table class="batch-comparison-table">
                 <thead>
@@ -840,7 +957,50 @@ function generateBatchWorstFactorComparison(container, question) {
             </table>
         </div>
         
-
+        <!-- 移動版卡片式布局 -->
+        <div class="mobile-comparison-cards">
+    `;
+    
+    otherFactors.forEach(factorKey => {
+        const factorInfo = factors[factorKey];
+        const savedValue = bwmAnswers[`worst_${factorKey}_${savedWorstFactor}`];
+        
+        html += `
+            <div class="comparison-card">
+                <div class="comparison-card-header">
+                    <h6><strong>${factorKey}. ${factorInfo.name}</strong> vs <strong>${savedWorstFactor}. ${worstFactorInfo.name}</strong></h6>
+                </div>
+                <div class="comparison-card-body">
+                    <div class="comparison-factor-info">
+                        <h6>因素說明：</h6>
+                        <p>${factorInfo.description}</p>
+                        <h6>舉例說明：</h6>
+                        <ul>
+                            ${factorInfo.examples.map(example => `<li>${example}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="mobile-rating-buttons">
+        `;
+        
+        for (let i = 1; i <= 9; i++) {
+            const isSelected = savedValue == i;
+            html += `
+                        <button type="button" class="btn mobile-rating-btn ${isSelected ? 'btn-primary' : 'btn-outline-secondary'}" 
+                                onclick="setBatchBWMScore('worst_${factorKey}_${savedWorstFactor}', ${i}, this)">
+                            ${i}
+                        </button>
+            `;
+        }
+        
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `
+        </div>
     `;
     
     container.innerHTML = html;
@@ -927,15 +1087,36 @@ function selectWorstFactor(factorKey) {
 function setBatchBWMScore(key, score, button) {
     bwmAnswers[key] = score;
     
-    // 更新按鈕狀態
+    // 更新桌面版表格按鈕狀態
     const row = button.closest('tr');
-    const buttons = row.querySelectorAll('.rating-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('btn-primary');
-        btn.classList.add('btn-outline-secondary');
+    if (row) {
+        const buttons = row.querySelectorAll('.rating-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-secondary');
+        });
+        button.classList.remove('btn-outline-secondary');
+        button.classList.add('btn-primary');
+    }
+    
+    // 更新移動版卡片按鈕狀態
+    const card = button.closest('.comparison-card');
+    if (card) {
+        const buttons = card.querySelectorAll('.mobile-rating-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-outline-secondary');
+        });
+        button.classList.remove('btn-outline-secondary');
+        button.classList.add('btn-primary');
+    }
+    
+    // 同步更新對應的桌面版/移動版按鈕
+    const allButtons = document.querySelectorAll(`[onclick*="setBatchBWMScore('${key}', ${score}"]`);
+    allButtons.forEach(btn => {
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-primary');
     });
-    button.classList.remove('btn-outline-secondary');
-    button.classList.add('btn-primary');
     
     autoSaveAnswers();
     updateBWMQuestionNavigation();

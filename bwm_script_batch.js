@@ -422,7 +422,7 @@ function generateBWMSelections() {
                                     <td>絕對差異(Absolute difference)</td>
                                     <td>充分證據絕對偏好某一方案</td>
                                 </tr>
-                            </tbody>
+                             </tbody>
                         </table>
                     </div>
                 </div>
@@ -657,32 +657,11 @@ function generateBatchBestFactorComparison(container, question) {
             </ul>
         </div>
         
-        <!-- 移動端評分標準 -->
-        <div class="mobile-rating-scale">
-            <h6><i class="fas fa-info-circle"></i> 評分標準</h6>
-            <div class="rating-item">
-                <div class="rating-number">1</div>
-                <div class="rating-text">同等重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">3</div>
-                <div class="rating-text">稍微重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">5</div>
-                <div class="rating-text">明顯重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">7</div>
-                <div class="rating-text">非常重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">9</div>
-                <div class="rating-text">極端重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">2,4,6,8</div>
-                <div class="rating-text">中間值</div>
+        <!-- 最重要因素評分標準說明 -->
+        <div class="rating-note mb-3">
+            <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle"></i> 備註</h6>
+                <p class="mb-0">與最重要的因素相比，分數較高等於不重要的因素；分數較低等於重要因素</p>
             </div>
         </div>
         
@@ -889,32 +868,11 @@ function generateBatchWorstFactorComparison(container, question) {
             </ul>
         </div>
         
-        <!-- 移動端評分標準 -->
-        <div class="mobile-rating-scale">
-            <h6><i class="fas fa-info-circle"></i> 評分標準</h6>
-            <div class="rating-item">
-                <div class="rating-number">1</div>
-                <div class="rating-text">同等重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">3</div>
-                <div class="rating-text">稍微重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">5</div>
-                <div class="rating-text">明顯重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">7</div>
-                <div class="rating-text">非常重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">9</div>
-                <div class="rating-text">極端重要</div>
-            </div>
-            <div class="rating-item">
-                <div class="rating-number">2,4,6,8</div>
-                <div class="rating-text">中間值</div>
+        <!-- 最不重要因素評分標準說明 -->
+        <div class="rating-note mb-3">
+            <div class="alert alert-warning">
+                <h6><i class="fas fa-info-circle"></i> 備註</h6>
+                <p class="mb-0">與最不重要的因素相比，分數較高等於重要因素；分數較低等於不重要因素</p>
             </div>
         </div>
         

@@ -154,7 +154,35 @@ let bwmQuestions = [];
 document.addEventListener('DOMContentLoaded', function() {
     initializeBWMQuestionnaire();
     loadSavedAnswers();
+    
+    // 移動端初始化檢查
+    if (window.innerWidth <= 768) {
+        console.log('檢測到移動端設備，初始化移動端優化...');
+        initializeMobileOptimization();
+    }
 });
+
+// 移動端優化初始化
+function initializeMobileOptimization() {
+    // 確保移動端樣式正確應用
+    document.body.classList.add('mobile-device');
+    
+    // 監聽視窗大小變化
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+            document.body.classList.add('mobile-device');
+        } else {
+            document.body.classList.remove('mobile-device');
+        }
+    });
+    
+    // 強制重新渲染評分界面
+    setTimeout(() => {
+        if (currentStep === 3 && currentBWMQuestion >= 2) {
+            showCurrentBWMQuestion();
+        }
+    }, 500);
+}
 
 // 初始化BWM問卷
 function initializeBWMQuestionnaire() {
@@ -778,7 +806,8 @@ function generateBatchBestFactorComparison(container, question) {
             const isSelected = savedValue == i;
             html += `
                         <button type="button" class="btn mobile-rating-btn ${isSelected ? 'btn-primary' : 'btn-outline-secondary'}" 
-                                onclick="setBatchBWMScore('best_${savedBestFactor}_${factorKey}', ${i}, this)">
+                                onclick="setBatchBWMScore('best_${savedBestFactor}_${factorKey}', ${i}, this)"
+                                style="display: flex; align-items: center; justify-content: center; min-width: 35px; height: 40px; font-size: 13px; font-weight: 600;">
                             ${i}
                         </button>
             `;
@@ -797,6 +826,20 @@ function generateBatchBestFactorComparison(container, question) {
     
     container.innerHTML = html;
     updateBatchBestProgress();
+    
+    // 移動端調試：確保評分按鈕正確顯示
+    setTimeout(() => {
+        const mobileButtons = document.querySelectorAll('.mobile-rating-btn');
+        const mobileCards = document.querySelectorAll('.mobile-comparison-cards');
+        console.log('移動端評分按鈕數量:', mobileButtons.length);
+        console.log('移動端卡片數量:', mobileCards.length);
+        
+        // 如果沒有找到移動端按鈕，嘗試重新生成
+        if (mobileButtons.length === 0) {
+            console.log('未找到移動端評分按鈕，嘗試重新生成...');
+            showCurrentBWMQuestion();
+        }
+    }, 100);
 }
 
 // 生成批量最不重要因素比較
@@ -1021,7 +1064,8 @@ function generateBatchWorstFactorComparison(container, question) {
             html += `
                         <button type="button" class="btn mobile-rating-btn ${isSelected ? 'btn-primary' : 'btn-outline-secondary'}" 
                                 ${isDisabled ? 'disabled' : ''}
-                                onclick="${isDisabled ? '' : `setBatchBWMScore('worst_${factorKey}_${savedWorstFactor}', ${i}, this)`}">
+                                onclick="${isDisabled ? '' : `setBatchBWMScore('worst_${factorKey}_${savedWorstFactor}', ${i}, this)`}"
+                                style="display: flex; align-items: center; justify-content: center; min-width: 35px; height: 40px; font-size: 13px; font-weight: 600;">
                             ${i}
                         </button>
             `;
@@ -1040,6 +1084,20 @@ function generateBatchWorstFactorComparison(container, question) {
     
     container.innerHTML = html;
     updateBatchWorstProgress();
+    
+    // 移動端調試：確保評分按鈕正確顯示
+    setTimeout(() => {
+        const mobileButtons = document.querySelectorAll('.mobile-rating-btn');
+        const mobileCards = document.querySelectorAll('.mobile-comparison-cards');
+        console.log('移動端評分按鈕數量:', mobileButtons.length);
+        console.log('移動端卡片數量:', mobileCards.length);
+        
+        // 如果沒有找到移動端按鈕，嘗試重新生成
+        if (mobileButtons.length === 0) {
+            console.log('未找到移動端評分按鈕，嘗試重新生成...');
+            showCurrentBWMQuestion();
+        }
+    }, 100);
 } 
 
 // 選擇最重要因素

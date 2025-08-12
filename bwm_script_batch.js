@@ -208,18 +208,18 @@ function generateBWMQuestions() {
         description: '請從以下10個因素中選擇一個您認為對數位轉型最重要的因素。'
     });
     
-    // 添加最不重要因素選擇問題
-    bwmQuestions.push({
-        type: 'worst_selection',
-        title: '請選擇您認為最不重要的因素（最不重要因素）',
-        description: '請從以下10個因素中選擇一個您認為對數位轉型最不重要的因素。'
-    });
-    
     // 添加批量最重要因素比較問題
     bwmQuestions.push({
         type: 'batch_best_comparison',
         title: '最重要因素與其他因素比較',
         description: '請評估最重要因素與其他因素相比的重要性程度。'
+    });
+    
+    // 添加最不重要因素選擇問題
+    bwmQuestions.push({
+        type: 'worst_selection',
+        title: '請選擇您認為最不重要的因素（最不重要因素）',
+        description: '請從以下10個因素中選擇一個您認為對數位轉型最不重要的因素。'
     });
     
     // 添加批量最不重要因素比較問題
